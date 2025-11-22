@@ -9,8 +9,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>🚀 Flask REST API</h1>
-            <p>Todo Yönetim API'si - Dokümantasyon</p>
+            <h1>Flask REST API</h1>
+            <p>Todo Yönetim API Dokümantasyonu</p>
         </header>
 
         <nav>
@@ -20,7 +20,7 @@
 
         <main>
             <section class="endpoint">
-                <h2>📋 Tüm Todo'ları Getir</h2>
+                <h2>Tüm Todo'ları Getir</h2>
                 <div class="method get">GET</div>
                 <code>/api/todos</code>
                 <button onclick="testAPI('GET', '/api/todos')">Test Et</button>
@@ -33,7 +33,7 @@
             </section>
 
             <section class="endpoint">
-                <h2>🔍 Tek Todo Getir</h2>
+                <h2>Tek Todo Getir</h2>
                 <div class="method get">GET</div>
                 <code>/api/todos/&lt;id&gt;</code>
                 <button onclick="testAPI('GET', '/api/todos/1')">Test Et</button>
@@ -45,7 +45,7 @@
             </section>
 
             <section class="endpoint">
-                <h2>➕ Yeni Todo Oluştur</h2>
+                <h2>Yeni Todo Oluştur</h2>
                 <div class="method post">POST</div>
                 <code>/api/todos</code>
                 <pre class="request">Body:
@@ -57,7 +57,7 @@
             </section>
 
             <section class="endpoint">
-                <h2>✏️ Todo Güncelle</h2>
+                <h2>Todo Güncelle</h2>
                 <div class="method put">PUT</div>
                 <code>/api/todos/&lt;id&gt;</code>
                 <pre class="request">Body:
@@ -69,14 +69,14 @@
             </section>
 
             <section class="endpoint">
-                <h2>🗑️ Todo Sil</h2>
+                <h2>Todo Sil</h2>
                 <div class="method delete">DELETE</div>
                 <code>/api/todos/&lt;id&gt;</code>
                 <button onclick="testAPI('DELETE', '/api/todos/2')">Test Et</button>
             </section>
 
             <section class="endpoint">
-                <h2>📊 İstatistikler</h2>
+                <h2>İstatistikler</h2>
                 <div class="method get">GET</div>
                 <code>/api/stats</code>
                 <button onclick="testAPI('GET', '/api/stats')">Test Et</button>
@@ -110,7 +110,7 @@
                 
                 result.innerHTML = `
                     <div class="result-box success">
-                        <h3>✅ Sonuç (${response.status})</h3>
+                        <h3>Sonuç (${response.status})</h3>
                         <pre>${JSON.stringify(data, null, 2)}</pre>
                     </div>
                 `;
