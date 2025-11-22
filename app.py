@@ -2,12 +2,16 @@ from flask import Flask, render_template, jsonify, request
 import os
 from datetime import datetime
 import requests as http_requests
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
 
-# Groq API Configuration
-GROQ_API_KEY = os.environ.get('XAI_API_KEY', '')
-GROQ_API_URL = "https://api.x.ai/v1/chat/completions"
+# xAI Grok API Configuration
+XAI_API_KEY = os.environ.get('XAI_API_KEY', '')
+XAI_API_URL = "https://api.x.ai/v1/chat/completions"
 
 # Basit in-memory veri deposu
 todos = [
@@ -116,9 +120,16 @@ def chat_api():
         if not user_message:
             return jsonify({'success': False, 'message': 'Mesaj gerekli'}), 400
         
-        # Grok API isteği
+        # Check API key
+        if not XAI_API_KEY:
+            return jsonify({
+                'success': False,
+                'message': 'API anahtarı ayarlanmamış. Lütfen XAI_API_KEY environment variable\'ını ekleyin.'
+            }), 500
+        
+        # xAI Grok API isteği
         headers = {
-            'Authorization': f'Bearer {GROQ_API_KEY}',
+            'Authorization': f'Bearer {XAI_API_KEY}',
             'Content-Type': 'application/json'
         }
         
@@ -135,10 +146,11 @@ def chat_api():
                 }
             ],
             'temperature': 0.7,
-            'max_tokens': 1000
+            'max_tokens': 1000,
+            'stream': False
         }
         
-        response = http_requests.post(GROQ_API_URL, json=payload, headers=headers)
+        response = http_requests.post(XAI_API_URL, json=payload, headers=headers, timeout=30)
         
         if response.status_code == 200:
             result = response.json()
@@ -150,10 +162,21 @@ def chat_api():
                 'model': 'grok-beta'
             })
         else:
+            error_detail = response.text
+            try:
+                error_json = response.json()
+                error_detail = error_json.get('error', {}).get('message', error_detail)
+            except:
+                pass
+            
             return jsonify({
                 'success': False,
-                'message': f'API Hatası: {response.status_code}',
-                'error': response.text
+                'message': f'API Hatası ({response.status_code}): {error_detail}',
+                'debug': {
+                    'status': response.status_code,
+                    'has_key': bool(XAI_API_KEY),
+                    'key_preview': XAI_API_KEY[:10] + '...' if XAI_API_KEY else 'None'
+                }
             }), response.status_code
             
     except Exception as e:
