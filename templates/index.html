@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoş Geldiniz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌟 Hoş Geldiniz</h1>
+        </header>
+        
+        <main>
+            <div class="welcome-card">
+                <h2>Flask Web Uygulaması</h2>
+                <p>Modern ve şık bir web arayüzüne sahip Flask uygulamanız hazır!</p>
+                
+                <div class="features">
+                    <div class="feature-item">
+                        <span class="icon">🚀</span>
+                        <h3>Hızlı</h3>
+                        <p>Flask ile hızlı ve verimli</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="icon">💎</span>
+                        <h3>Modern</h3>
+                        <p>Güncel tasarım prensipleri</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="icon">🎨</span>
+                        <h3>Şık</h3>
+                        <p>Göz alıcı arayüz</p>
+                    </div>
+                </div>
+                
+                <div class="cta-section">
+                    <button class="btn-primary" onclick="showMessage()">Başlayın</button>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2025 Flask Web App | Powered by Flask</p>
+        </footer>
+    </div>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
