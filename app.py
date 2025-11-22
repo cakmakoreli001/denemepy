@@ -1,8 +1,13 @@
 from flask import Flask, render_template, jsonify, request
 import os
 from datetime import datetime
+import requests as http_requests
 
 app = Flask(__name__)
+
+# Groq API Configuration
+GROQ_API_KEY = os.environ.get('XAI_API_KEY', '')
+GROQ_API_URL = "https://api.x.ai/v1/chat/completions"
 
 # Basit in-memory veri deposu
 todos = [
@@ -94,6 +99,68 @@ def get_stats():
             'pending': len(todos) - completed
         }
     })
+
+# Chatbot Routes
+@app.route('/chat')
+def chat():
+    """Chatbot arayüzü"""
+    return render_template('chat.html')
+
+@app.route('/api/chat', methods=['POST'])
+def chat_api():
+    """Grok AI ile sohbet"""
+    try:
+        data = request.get_json()
+        user_message = data.get('message', '')
+        
+        if not user_message:
+            return jsonify({'success': False, 'message': 'Mesaj gerekli'}), 400
+        
+        # Grok API isteği
+        headers = {
+            'Authorization': f'Bearer {GROQ_API_KEY}',
+            'Content-Type': 'application/json'
+        }
+        
+        payload = {
+            'model': 'grok-beta',
+            'messages': [
+                {
+                    'role': 'system',
+                    'content': 'Sen Grok, esprili ve bilgili bir AI asistanısın. Kullanıcılara yardımcı ol ve gerektiğinde esprili yanıtlar ver.'
+                },
+                {
+                    'role': 'user',
+                    'content': user_message
+                }
+            ],
+            'temperature': 0.7,
+            'max_tokens': 1000
+        }
+        
+        response = http_requests.post(GROQ_API_URL, json=payload, headers=headers)
+        
+        if response.status_code == 200:
+            result = response.json()
+            ai_message = result['choices'][0]['message']['content']
+            
+            return jsonify({
+                'success': True,
+                'message': ai_message,
+                'model': 'grok-beta'
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': f'API Hatası: {response.status_code}',
+                'error': response.text
+            }), response.status_code
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Hata: {str(e)}'
+        }), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
